@@ -9,22 +9,24 @@
             <t t-set="no_header" t-value="True"/>
             <t t-set="no_footer" t-value="True"/>
             <t t-set="user_initial" t-value="(request.env.user.name or 'U')[0:1].upper()"/>
+            <t t-set="user_name"    t-value="request.env.user.name or ''"/>
+            <t t-set="user_email"   t-value="request.env.user.email or ''"/>
 
             <body class="hb-body">
                 <div class="hb-wrapper">
 
-                    <!-- SIDEBAR -->
+                    <!-- ── SIDEBAR ──────────────────────────────────── -->
                     <aside class="hb-sidebar">
-                        <a href="/hobox/profile" class="hb-logo">
+                        <a href="/hobox/dashboard" class="hb-logo">
                             <div class="hb-logo-icon">H</div>
                             <span class="hb-logo-text">HOBOX</span>
                         </a>
                         <nav class="hb-nav">
                             <span class="hb-nav-section">Main</span>
-                            <a href="/hobox/profile"
-                               t-att-class="'hb-nav-link' + (' active' if page == 'profile' else '')">
-                                <i class="fa fa-user"/>
-                                Profile
+                            <a href="/hobox/dashboard"
+                               t-att-class="'hb-nav-link' + (' active' if page == 'dashboard' else '')">
+                                <i class="fa fa-th-large"/>
+                                Dashboard
                             </a>
 
                             <span class="hb-nav-section">Operations</span>
@@ -71,8 +73,10 @@
                         <div class="hb-sidebar-footer">HOBOX Fulfillment v1.0</div>
                     </aside>
 
-                    <!-- MAIN -->
+                    <!-- ── MAIN ─────────────────────────────────────── -->
                     <div class="hb-main">
+
+                        <!-- TOPBAR -->
                         <header class="hb-topbar">
                             <span class="hb-topbar-title">
                                 <t t-out="page_title or 'Dashboard'"/>
@@ -82,28 +86,307 @@
                                     <i class="fa fa-search"/>
                                     <input type="text" placeholder="Search..."/>
                                 </div>
-                                <div class="hb-avatar">
-                                    <t t-out="user_initial"/>
+
+                                <!-- ── AVATAR DROPDOWN ───────────────── -->
+                                <div class="hb-user-menu" id="hbUserMenu">
+                                    <button class="hb-user-trigger" id="hbUserTrigger"
+                                            type="button" aria-haspopup="true"
+                                            aria-expanded="false">
+                                        <div class="hb-avatar">
+                                            <t t-out="user_initial"/>
+                                        </div>
+                                        <div class="hb-user-info">
+                                            <span class="hb-user-name">
+                                                <t t-out="user_name"/>
+                                            </span>
+                                            <span class="hb-user-email">
+                                                <t t-out="user_email"/>
+                                            </span>
+                                        </div>
+                                        <i class="fa fa-chevron-down hb-chevron"/>
+                                    </button>
+
+                                    <div class="hb-dropdown" id="hbDropdown" role="menu">
+                                        <!-- identity header -->
+                                        <div class="hb-dropdown-header">
+                                            <div class="hb-avatar hb-avatar-lg">
+                                                <t t-out="user_initial"/>
+                                            </div>
+                                            <div>
+                                                <div class="hb-dropdown-name">
+                                                    <t t-out="user_name"/>
+                                                </div>
+                                                <div class="hb-dropdown-email">
+                                                    <t t-out="user_email"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="hb-dropdown-divider"/>
+                                        <a href="/hobox/profile"
+                                           class="hb-dropdown-item" role="menuitem">
+                                            <i class="fa fa-user-circle"/>
+                                            My Profile
+                                        </a>
+                                        <a href="/hobox/profile/edit"
+                                           class="hb-dropdown-item" role="menuitem">
+                                            <i class="fa fa-edit"/>
+                                            Edit Profile
+                                        </a>
+                                        <a href="/hobox/integrations"
+                                           class="hb-dropdown-item" role="menuitem">
+                                            <i class="fa fa-plug"/>
+                                            Integrations
+                                        </a>
+                                        <div class="hb-dropdown-divider"/>
+                                        <a href="/web/session/logout?redirect=/hobox/landing"
+                                           class="hb-dropdown-item hb-dropdown-logout"
+                                           role="menuitem">
+                                            <i class="fa fa-sign-out"/>
+                                            Sign Out
+                                        </a>
+                                    </div>
                                 </div>
+                                <!-- ── END AVATAR DROPDOWN ──────────── -->
+
                             </div>
                         </header>
+
                         <div class="hb-content">
                             <t t-out="0"/>
                         </div>
                     </div>
 
-                </div>
+                </div><!-- /.hb-wrapper -->
+
+                <!-- Vanilla JS dropdown — no jQuery needed -->
+                <script>
+                (function () {
+                    var trigger  = document.getElementById('hbUserTrigger');
+                    var menu     = document.getElementById('hbUserMenu');
+                    if (!trigger) return;
+
+                    trigger.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        var open = menu.classList.toggle('hb-open');
+                        trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+                    });
+
+                    document.addEventListener('click', function (e) {
+                        if (!menu.contains(e.target)) {
+                            menu.classList.remove('hb-open');
+                            trigger.setAttribute('aria-expanded', 'false');
+                        }
+                    });
+
+                    document.addEventListener('keydown', function (e) {
+                        if (e.key === 'Escape') {
+                            menu.classList.remove('hb-open');
+                            trigger.setAttribute('aria-expanded', 'false');
+                        }
+                    });
+                })();
+                </script>
+
             </body>
         </t>
     </template>
+
+
+    <!-- ══════════════════════════════════════
+         DASHBOARD
+    ══════════════════════════════════════ -->
+    <template id="hobox_dashboard" name="HOBOX Dashboard">
+        <t t-call="hobox_fulfillment.hobox_layout">
+            <t t-set="page"       t-value="'dashboard'"/>
+            <t t-set="page_title" t-value="'Dashboard'"/>
+
+            <!-- Welcome banner -->
+            <div class="hb-welcome">
+                <div>
+                    <div class="hb-welcome-title">
+                        Welcome back,
+                        <t t-out="partner.name.split()[0] if partner.name else 'Client'"/>! 👋
+                    </div>
+                    <div class="hb-welcome-sub">
+                        Here's a snapshot of your fulfillment activity today.
+                    </div>
+                </div>
+                <a href="/hobox/orders" class="hb-btn hb-btn-primary">
+                    <i class="fa fa-shopping-cart"/>
+                    View All Orders
+                </a>
+            </div>
+
+            <!-- ── ROW 1 : Order KPIs ──────────────────────────────── -->
+            <div class="hb-kpi-label">Orders</div>
+            <div class="hb-stats" style="margin-bottom:28px;">
+                <a href="/hobox/orders" class="hb-stat-card hb-stat-link">
+                    <div class="hb-stat-icon hb-icon-purple"><i class="fa fa-list"/></div>
+                    <span class="hb-stat-label">Total Orders</span>
+                    <span class="hb-stat-value"><t t-out="total_orders"/></span>
+                </a>
+                <a href="/hobox/orders" class="hb-stat-card hb-stat-link">
+                    <div class="hb-stat-icon hb-icon-green"><i class="fa fa-check-circle"/></div>
+                    <span class="hb-stat-label">Completed</span>
+                    <span class="hb-stat-value"><t t-out="completed_orders"/></span>
+                </a>
+                <a href="/hobox/orders" class="hb-stat-card hb-stat-link">
+                    <div class="hb-stat-icon hb-icon-orange"><i class="fa fa-clock-o"/></div>
+                    <span class="hb-stat-label">In Progress</span>
+                    <span class="hb-stat-value"><t t-out="inprogress_orders"/></span>
+                </a>
+                <a href="/hobox/orders" class="hb-stat-card hb-stat-link">
+                    <div class="hb-stat-icon hb-icon-cyan"><i class="fa fa-money"/></div>
+                    <span class="hb-stat-label">COD Orders</span>
+                    <span class="hb-stat-value"><t t-out="cod_orders"/></span>
+                </a>
+            </div>
+
+            <!-- ── ROW 2 : Inventory + Logistics + Finance ────────── -->
+            <div class="hb-kpi-label">Inventory &amp; Logistics</div>
+            <div class="hb-stats" style="margin-bottom:36px;">
+                <a href="/hobox/products" class="hb-stat-card hb-stat-link">
+                    <div class="hb-stat-icon hb-icon-purple"><i class="fa fa-cube"/></div>
+                    <span class="hb-stat-label">Total SKUs</span>
+                    <span class="hb-stat-value"><t t-out="total_products"/></span>
+                    <t t-if="low_stock">
+                        <span class="hb-stat-badge hb-badge-danger">
+                            <i class="fa fa-exclamation-triangle"/>
+                            <t t-out="low_stock"/> low stock
+                        </span>
+                    </t>
+                </a>
+                <a href="/hobox/receipts" class="hb-stat-card hb-stat-link">
+                    <div class="hb-stat-icon hb-icon-cyan"><i class="fa fa-truck"/></div>
+                    <span class="hb-stat-label">Inbound Receipts</span>
+                    <span class="hb-stat-value"><t t-out="total_receipts"/></span>
+                    <t t-if="pending_receipts">
+                        <span class="hb-stat-badge hb-badge-warning">
+                            <t t-out="pending_receipts"/> pending
+                        </span>
+                    </t>
+                </a>
+                <a href="/hobox/deliveries" class="hb-stat-card hb-stat-link">
+                    <div class="hb-stat-icon hb-icon-green"><i class="fa fa-paper-plane"/></div>
+                    <span class="hb-stat-label">Delivered</span>
+                    <span class="hb-stat-value"><t t-out="delivered"/></span>
+                    <t t-if="failed_deliveries">
+                        <span class="hb-stat-badge hb-badge-danger">
+                            <t t-out="failed_deliveries"/> failed
+                        </span>
+                    </t>
+                </a>
+                <a href="/hobox/cod" class="hb-stat-card hb-stat-link">
+                    <div class="hb-stat-icon hb-icon-orange"><i class="fa fa-bank"/></div>
+                    <span class="hb-stat-label">Net COD Balance</span>
+                    <span class="hb-stat-value hb-stat-value-sm">
+                        <t t-esc="'%.2f' % net_cod_total"/> SAR
+                    </span>
+                    <t t-if="pending_withdrawals">
+                        <span class="hb-stat-badge hb-badge-warning">
+                            <t t-out="pending_withdrawals"/> pending withdrawal
+                        </span>
+                    </t>
+                </a>
+            </div>
+
+            <!-- ── BOTTOM GRID : Recent Orders + Recent Deliveries ── -->
+            <div class="hb-dash-grid">
+
+                <!-- Recent Orders -->
+                <div class="hb-card">
+                    <div class="hb-card-header">
+                        Recent Orders
+                        <a href="/hobox/orders" class="hb-card-header-link">View all →</a>
+                    </div>
+                    <table class="hb-table">
+                        <thead>
+                            <tr>
+                                <th>Order</th>
+                                <th>Platform Ref</th>
+                                <th>Date</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="recent_orders" t-as="o">
+                                <tr>
+                                    <td><t t-out="o.name"/></td>
+                                    <td><t t-out="o.source_order_ref or '-'"/></td>
+                                    <td>
+                                        <t t-out="o.date_order"
+                                           t-options='{"widget":"date"}'/>
+                                    </td>
+                                    <td><t t-out="o.amount_total"/></td>
+                                    <td>
+                                        <t t-set="bc"
+                                           t-value="'hb-badge-success' if o.hobox_state == 'completed' else ('hb-badge-danger' if o.hobox_state == 'cancelled' else ('hb-badge-info' if o.hobox_state == 'shipped' else 'hb-badge-warning'))"/>
+                                        <span t-att-class="'hb-badge ' + bc">
+                                            <t t-out="o.hobox_state"/>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr t-if="not recent_orders">
+                                <td colspan="5" class="hb-empty">No orders yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Recent Deliveries -->
+                <div class="hb-card">
+                    <div class="hb-card-header">
+                        Recent Deliveries
+                        <a href="/hobox/deliveries" class="hb-card-header-link">View all →</a>
+                    </div>
+                    <table class="hb-table">
+                        <thead>
+                            <tr>
+                                <th>Reference</th>
+                                <th>Customer</th>
+                                <th>Carrier</th>
+                                <th>Attempts</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="recent_deliveries" t-as="d">
+                                <tr>
+                                    <td><t t-out="d.name"/></td>
+                                    <td><t t-out="d.partner_id.name"/></td>
+                                    <td><t t-out="d.carrier_id.name or '-'"/></td>
+                                    <td><t t-out="d.delivery_attempts"/></td>
+                                    <td>
+                                        <t t-set="dc"
+                                           t-value="'hb-badge-success' if d.carrier_tracking_state == 'delivered' else ('hb-badge-danger' if d.carrier_tracking_state == 'failed' else ('hb-badge-info' if d.carrier_tracking_state == 'out_for_delivery' else 'hb-badge-warning'))"/>
+                                        <span t-att-class="'hb-badge ' + dc">
+                                            <t t-out="d.carrier_tracking_state"/>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr t-if="not recent_deliveries">
+                                <td colspan="5" class="hb-empty">No deliveries yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div><!-- /.hb-dash-grid -->
+
+        </t>
+    </template>
+
 
     <!-- ══════════════════════════════════════
          PROFILE
     ══════════════════════════════════════ -->
     <template id="hobox_profile" name="HOBOX Profile">
         <t t-call="hobox_fulfillment.hobox_layout">
-            <t t-set="page" t-value="'profile'"/>
-            <t t-set="page_title" t-value="'Profile'"/>
+            <t t-set="page"       t-value="'profile'"/>
+            <t t-set="page_title" t-value="'My Profile'"/>
             <div class="hb-actions">
                 <a href="/hobox/profile/edit" class="hb-btn hb-btn-primary">
                     <i class="fa fa-edit"/>
@@ -115,32 +398,26 @@
                 <div style="padding:28px;">
                     <dl class="hb-profile-dl">
                         <dt>Name</dt>
-                        <dd>
-                            <t t-out="partner.name or '-'"/>
-                        </dd>
+                        <dd><t t-out="partner.name or '-'"/></dd>
                         <dt>Client Code</dt>
-                        <dd>
-                            <t t-out="partner.ref or '-'"/>
-                        </dd>
+                        <dd><t t-out="partner.ref or '-'"/></dd>
                         <dt>Email</dt>
-                        <dd>
-                            <t t-out="partner.email or '-'"/>
-                        </dd>
+                        <dd><t t-out="partner.email or '-'"/></dd>
                         <dt>Phone</dt>
-                        <dd>
-                            <t t-out="partner.phone or '-'"/>
-                        </dd>
+                        <dd><t t-out="partner.phone or '-'"/></dd>
                         <dt>Agreement Date</dt>
-                        <dd>
-                            <t t-out="partner.date or '-'"/>
-                        </dd>
+                        <dd><t t-out="partner.date or '-'"/></dd>
                         <dt>Warehouse</dt>
-                        <dd>
-                            <t t-out="partner.warehouse_id.name or '-'"/>
-                        </dd>
+                        <dd><t t-out="partner.warehouse_id.name or '-'"/></dd>
                         <dt>Storage Type</dt>
+                        <dd><t t-out="partner.default_storage_type or '-'"/></dd>
+                        <dt>Status</dt>
                         <dd>
-                            <t t-out="partner.default_storage_type or '-'"/>
+                            <t t-set="sc"
+                               t-value="'hb-badge-success' if partner.hobox_state == 'active' else ('hb-badge-danger' if partner.hobox_state == 'suspended' else 'hb-badge-default')"/>
+                            <span t-att-class="'hb-badge ' + sc">
+                                <t t-out="partner.hobox_state or '-'"/>
+                            </span>
                         </dd>
                     </dl>
                 </div>
@@ -150,7 +427,7 @@
 
     <template id="hobox_profile_edit" name="HOBOX Profile Edit">
         <t t-call="hobox_fulfillment.hobox_layout">
-            <t t-set="page" t-value="'profile'"/>
+            <t t-set="page"       t-value="'profile'"/>
             <t t-set="page_title" t-value="'Edit Profile'"/>
             <div class="hb-form-card">
                 <form method="post" action="/hobox/profile/save">
@@ -158,15 +435,18 @@
                     <div class="hb-form-row">
                         <div class="hb-form-group">
                             <label>Name</label>
-                            <input type="text" name="name" t-att-value="partner.name" required="required"/>
+                            <input type="text" name="name"
+                                   t-att-value="partner.name" required="required"/>
                         </div>
                         <div class="hb-form-group">
                             <label>Email</label>
-                            <input type="email" name="email" t-att-value="partner.email or ''"/>
+                            <input type="email" name="email"
+                                   t-att-value="partner.email or ''"/>
                         </div>
                         <div class="hb-form-group">
                             <label>Phone</label>
-                            <input type="text" name="phone" t-att-value="partner.phone or ''"/>
+                            <input type="text" name="phone"
+                                   t-att-value="partner.phone or ''"/>
                         </div>
                         <div class="hb-form-group">
                             <label>Storage Type</label>
@@ -195,55 +475,43 @@
         </t>
     </template>
 
+
     <!-- ══════════════════════════════════════
          ORDERS
     ══════════════════════════════════════ -->
     <template id="hobox_orders" name="HOBOX Orders">
         <t t-call="hobox_fulfillment.hobox_layout">
-            <t t-set="page" t-value="'orders'"/>
+            <t t-set="page"       t-value="'orders'"/>
             <t t-set="page_title" t-value="'Orders'"/>
-            <t t-set="total_orders" t-value="len(orders)"/>
-            <t t-set="cod_orders" t-value="len(orders.filtered(lambda o: o.is_cod))"/>
-            <t t-set="completed_orders" t-value="len(orders.filtered(lambda o: o.hobox_state == 'completed'))"/>
+            <t t-set="total_orders"
+               t-value="len(orders)"/>
+            <t t-set="cod_orders"
+               t-value="len(orders.filtered(lambda o: o.is_cod))"/>
+            <t t-set="completed_orders"
+               t-value="len(orders.filtered(lambda o: o.hobox_state == 'completed'))"/>
             <t t-set="inprogress_orders"
                t-value="len(orders.filtered(lambda o: o.hobox_state in ['received','processing','ready']))"/>
 
             <div class="hb-stats">
                 <div class="hb-stat-card">
-                    <div class="hb-stat-icon hb-icon-purple">
-                        <i class="fa fa-list"/>
-                    </div>
+                    <div class="hb-stat-icon hb-icon-purple"><i class="fa fa-list"/></div>
                     <span class="hb-stat-label">Total Orders</span>
-                    <span class="hb-stat-value">
-                        <t t-out="total_orders"/>
-                    </span>
+                    <span class="hb-stat-value"><t t-out="total_orders"/></span>
                 </div>
                 <div class="hb-stat-card">
-                    <div class="hb-stat-icon hb-icon-cyan">
-                        <i class="fa fa-money"/>
-                    </div>
+                    <div class="hb-stat-icon hb-icon-cyan"><i class="fa fa-money"/></div>
                     <span class="hb-stat-label">COD Orders</span>
-                    <span class="hb-stat-value">
-                        <t t-out="cod_orders"/>
-                    </span>
+                    <span class="hb-stat-value"><t t-out="cod_orders"/></span>
                 </div>
                 <div class="hb-stat-card">
-                    <div class="hb-stat-icon hb-icon-green">
-                        <i class="fa fa-check-circle"/>
-                    </div>
+                    <div class="hb-stat-icon hb-icon-green"><i class="fa fa-check-circle"/></div>
                     <span class="hb-stat-label">Completed</span>
-                    <span class="hb-stat-value">
-                        <t t-out="completed_orders"/>
-                    </span>
+                    <span class="hb-stat-value"><t t-out="completed_orders"/></span>
                 </div>
                 <div class="hb-stat-card">
-                    <div class="hb-stat-icon hb-icon-orange">
-                        <i class="fa fa-clock-o"/>
-                    </div>
+                    <div class="hb-stat-icon hb-icon-orange"><i class="fa fa-clock-o"/></div>
                     <span class="hb-stat-label">In Progress</span>
-                    <span class="hb-stat-value">
-                        <t t-out="inprogress_orders"/>
-                    </span>
+                    <span class="hb-stat-value"><t t-out="inprogress_orders"/></span>
                 </div>
             </div>
 
@@ -265,27 +533,16 @@
                     <tbody>
                         <t t-foreach="orders" t-as="o">
                             <tr>
+                                <td><t t-out="o.name"/></td>
+                                <td><t t-out="o.source_order_ref or '-'"/></td>
+                                <td><t t-out="o.partner_id.name"/></td>
+                                <td><t t-out="o.delivery_zone or '-'"/></td>
                                 <td>
-                                    <t t-out="o.name"/>
+                                    <t t-out="o.date_order"
+                                       t-options='{"widget": "date"}'/>
                                 </td>
-                                <td>
-                                    <t t-out="o.source_order_ref or '-'"/>
-                                </td>
-                                <td>
-                                    <t t-out="o.partner_id.name"/>
-                                </td>
-                                <td>
-                                    <t t-out="o.delivery_zone or '-'"/>
-                                </td>
-                                <td>
-                                    <t t-out="o.date_order" t-options='{"widget": "date"}'/>
-                                </td>
-                                <td>
-                                    <t t-out="o.amount_total"/>
-                                </td>
-                                <td>
-                                    <t t-out="'Yes' if o.is_cod else 'No'"/>
-                                </td>
+                                <td><t t-out="o.amount_total"/></td>
+                                <td><t t-out="'Yes' if o.is_cod else 'No'"/></td>
                                 <td>
                                     <t t-set="badge_class"
                                        t-value="'hb-badge-success' if o.hobox_state == 'completed' else ('hb-badge-danger' if o.hobox_state == 'cancelled' else ('hb-badge-info' if o.hobox_state == 'shipped' else 'hb-badge-warning'))"/>
@@ -304,12 +561,13 @@
         </t>
     </template>
 
+
     <!-- ══════════════════════════════════════
          PRODUCTS
     ══════════════════════════════════════ -->
     <template id="hobox_products" name="HOBOX Products">
         <t t-call="hobox_fulfillment.hobox_layout">
-            <t t-set="page" t-value="'products'"/>
+            <t t-set="page"       t-value="'products'"/>
             <t t-set="page_title" t-value="'Products / SKUs'"/>
             <t t-set="total_products" t-value="len(products)"/>
             <t t-set="low_stock_count"
@@ -317,22 +575,16 @@
 
             <div class="hb-stats">
                 <div class="hb-stat-card">
-                    <div class="hb-stat-icon hb-icon-purple">
-                        <i class="fa fa-cube"/>
-                    </div>
+                    <div class="hb-stat-icon hb-icon-purple"><i class="fa fa-cube"/></div>
                     <span class="hb-stat-label">Total SKUs</span>
-                    <span class="hb-stat-value">
-                        <t t-out="total_products"/>
-                    </span>
+                    <span class="hb-stat-value"><t t-out="total_products"/></span>
                 </div>
                 <div class="hb-stat-card">
                     <div class="hb-stat-icon hb-icon-red">
                         <i class="fa fa-exclamation-triangle"/>
                     </div>
                     <span class="hb-stat-label">Low Stock</span>
-                    <span class="hb-stat-value">
-                        <t t-out="low_stock_count"/>
-                    </span>
+                    <span class="hb-stat-value"><t t-out="low_stock_count"/></span>
                 </div>
             </div>
 
@@ -352,24 +604,12 @@
                     <tbody>
                         <t t-foreach="products" t-as="p">
                             <tr>
-                                <td>
-                                    <t t-out="p.default_code or '-'"/>
-                                </td>
-                                <td>
-                                    <t t-out="p.name"/>
-                                </td>
-                                <td>
-                                    <t t-out="p.categ_id.name"/>
-                                </td>
-                                <td>
-                                    <t t-out="p.storage_type or '-'"/>
-                                </td>
-                                <td>
-                                    <t t-out="p.qty_available"/>
-                                </td>
-                                <td>
-                                    <t t-out="p.low_stock_threshold"/>
-                                </td>
+                                <td><t t-out="p.default_code or '-'"/></td>
+                                <td><t t-out="p.name"/></td>
+                                <td><t t-out="p.categ_id.name"/></td>
+                                <td><t t-out="p.storage_type or '-'"/></td>
+                                <td><t t-out="p.qty_available"/></td>
+                                <td><t t-out="p.low_stock_threshold"/></td>
                             </tr>
                         </t>
                         <tr t-if="not products">
@@ -381,44 +621,35 @@
         </t>
     </template>
 
+
     <!-- ══════════════════════════════════════
          RECEIPTS
     ══════════════════════════════════════ -->
     <template id="hobox_receipts" name="HOBOX Receipts">
         <t t-call="hobox_fulfillment.hobox_layout">
-            <t t-set="page" t-value="'receipts'"/>
+            <t t-set="page"       t-value="'receipts'"/>
             <t t-set="page_title" t-value="'Inbound Receipts'"/>
-            <t t-set="total_r" t-value="len(receipts)"/>
-            <t t-set="done_r" t-value="len(receipts.filtered(lambda r: r.state == 'done'))"/>
+            <t t-set="total_r"   t-value="len(receipts)"/>
+            <t t-set="done_r"    t-value="len(receipts.filtered(lambda r: r.state == 'done'))"/>
             <t t-set="pending_r" t-value="len(receipts.filtered(lambda r: r.state != 'done'))"/>
 
             <div class="hb-stats">
                 <div class="hb-stat-card">
-                    <div class="hb-stat-icon hb-icon-purple">
-                        <i class="fa fa-truck"/>
-                    </div>
+                    <div class="hb-stat-icon hb-icon-purple"><i class="fa fa-truck"/></div>
                     <span class="hb-stat-label">Total</span>
-                    <span class="hb-stat-value">
-                        <t t-out="total_r"/>
-                    </span>
+                    <span class="hb-stat-value"><t t-out="total_r"/></span>
                 </div>
                 <div class="hb-stat-card">
-                    <div class="hb-stat-icon hb-icon-green">
-                        <i class="fa fa-check-circle"/>
-                    </div>
+                    <div class="hb-stat-icon hb-icon-green"><i class="fa fa-check-circle"/></div>
                     <span class="hb-stat-label">Done</span>
-                    <span class="hb-stat-value">
-                        <t t-out="done_r"/>
-                    </span>
+                    <span class="hb-stat-value"><t t-out="done_r"/></span>
                 </div>
                 <div class="hb-stat-card">
                     <div class="hb-stat-icon hb-icon-orange">
                         <i class="fa fa-hourglass-half"/>
                     </div>
                     <span class="hb-stat-label">Pending</span>
-                    <span class="hb-stat-value">
-                        <t t-out="pending_r"/>
-                    </span>
+                    <span class="hb-stat-value"><t t-out="pending_r"/></span>
                 </div>
             </div>
 
@@ -437,17 +668,15 @@
                     <tbody>
                         <t t-foreach="receipts" t-as="r">
                             <tr>
+                                <td><t t-out="r.name"/></td>
+                                <td><t t-out="r.origin or '-'"/></td>
                                 <td>
-                                    <t t-out="r.name"/>
+                                    <t t-out="r.scheduled_date"
+                                       t-options='{"widget": "date"}'/>
                                 </td>
                                 <td>
-                                    <t t-out="r.origin or '-'"/>
-                                </td>
-                                <td>
-                                    <t t-out="r.scheduled_date" t-options='{"widget": "date"}'/>
-                                </td>
-                                <td>
-                                    <t t-out="r.date_done" t-options='{"widget": "date"}'/>
+                                    <t t-out="r.date_done"
+                                       t-options='{"widget": "date"}'/>
                                 </td>
                                 <td>
                                     <t t-set="rc"
@@ -467,55 +696,42 @@
         </t>
     </template>
 
+
     <!-- ══════════════════════════════════════
          DELIVERIES
     ══════════════════════════════════════ -->
     <template id="hobox_deliveries" name="HOBOX Deliveries">
         <t t-call="hobox_fulfillment.hobox_layout">
-            <t t-set="page" t-value="'deliveries'"/>
+            <t t-set="page"       t-value="'deliveries'"/>
             <t t-set="page_title" t-value="'Deliveries'"/>
-            <t t-set="total_d" t-value="len(deliveries)"/>
-            <t t-set="done_d" t-value="len(deliveries.filtered(lambda d: d.carrier_tracking_state == 'delivered'))"/>
-            <t t-set="failed_d" t-value="len(deliveries.filtered(lambda d: d.carrier_tracking_state == 'failed'))"/>
+            <t t-set="total_d"    t-value="len(deliveries)"/>
+            <t t-set="done_d"
+               t-value="len(deliveries.filtered(lambda d: d.carrier_tracking_state == 'delivered'))"/>
+            <t t-set="failed_d"
+               t-value="len(deliveries.filtered(lambda d: d.carrier_tracking_state == 'failed'))"/>
             <t t-set="returned_d"
                t-value="len(deliveries.filtered(lambda d: d.carrier_tracking_state in ['returned_full','returned_partial']))"/>
 
             <div class="hb-stats">
                 <div class="hb-stat-card">
-                    <div class="hb-stat-icon hb-icon-purple">
-                        <i class="fa fa-paper-plane"/>
-                    </div>
+                    <div class="hb-stat-icon hb-icon-purple"><i class="fa fa-paper-plane"/></div>
                     <span class="hb-stat-label">Total</span>
-                    <span class="hb-stat-value">
-                        <t t-out="total_d"/>
-                    </span>
+                    <span class="hb-stat-value"><t t-out="total_d"/></span>
                 </div>
                 <div class="hb-stat-card">
-                    <div class="hb-stat-icon hb-icon-green">
-                        <i class="fa fa-check"/>
-                    </div>
+                    <div class="hb-stat-icon hb-icon-green"><i class="fa fa-check"/></div>
                     <span class="hb-stat-label">Delivered</span>
-                    <span class="hb-stat-value">
-                        <t t-out="done_d"/>
-                    </span>
+                    <span class="hb-stat-value"><t t-out="done_d"/></span>
                 </div>
                 <div class="hb-stat-card">
-                    <div class="hb-stat-icon hb-icon-red">
-                        <i class="fa fa-times-circle"/>
-                    </div>
+                    <div class="hb-stat-icon hb-icon-red"><i class="fa fa-times-circle"/></div>
                     <span class="hb-stat-label">Failed</span>
-                    <span class="hb-stat-value">
-                        <t t-out="failed_d"/>
-                    </span>
+                    <span class="hb-stat-value"><t t-out="failed_d"/></span>
                 </div>
                 <div class="hb-stat-card">
-                    <div class="hb-stat-icon hb-icon-orange">
-                        <i class="fa fa-undo"/>
-                    </div>
+                    <div class="hb-stat-icon hb-icon-orange"><i class="fa fa-undo"/></div>
                     <span class="hb-stat-label">Returned</span>
-                    <span class="hb-stat-value">
-                        <t t-out="returned_d"/>
-                    </span>
+                    <span class="hb-stat-value"><t t-out="returned_d"/></span>
                 </div>
             </div>
 
@@ -536,24 +752,12 @@
                     <tbody>
                         <t t-foreach="deliveries" t-as="d">
                             <tr>
-                                <td>
-                                    <t t-out="d.name"/>
-                                </td>
-                                <td>
-                                    <t t-out="d.origin or '-'"/>
-                                </td>
-                                <td>
-                                    <t t-out="d.partner_id.name"/>
-                                </td>
-                                <td>
-                                    <t t-out="d.carrier_id.name or '-'"/>
-                                </td>
-                                <td>
-                                    <t t-out="d.carrier_tracking_ref or '-'"/>
-                                </td>
-                                <td>
-                                    <t t-out="d.delivery_attempts"/>
-                                </td>
+                                <td><t t-out="d.name"/></td>
+                                <td><t t-out="d.origin or '-'"/></td>
+                                <td><t t-out="d.partner_id.name"/></td>
+                                <td><t t-out="d.carrier_id.name or '-'"/></td>
+                                <td><t t-out="d.carrier_tracking_ref or '-'"/></td>
+                                <td><t t-out="d.delivery_attempts"/></td>
                                 <td>
                                     <t t-set="dc"
                                        t-value="'hb-badge-success' if d.carrier_tracking_state == 'delivered' else ('hb-badge-danger' if d.carrier_tracking_state == 'failed' else ('hb-badge-info' if d.carrier_tracking_state == 'out_for_delivery' else 'hb-badge-warning'))"/>
@@ -572,12 +776,13 @@
         </t>
     </template>
 
+
     <!-- ══════════════════════════════════════
          COD SETTLEMENTS
     ══════════════════════════════════════ -->
     <template id="hobox_cod" name="HOBOX COD">
         <t t-call="hobox_fulfillment.hobox_layout">
-            <t t-set="page" t-value="'cod'"/>
+            <t t-set="page"       t-value="'cod'"/>
             <t t-set="page_title" t-value="'COD Settlements'"/>
             <div class="hb-card">
                 <div class="hb-card-header">All COD Settlements</div>
@@ -597,28 +802,17 @@
                     <tbody>
                         <t t-foreach="cod_settlements" t-as="c">
                             <tr>
+                                <td><t t-out="c.name"/></td>
+                                <td><t t-out="c.carrier_id.name or '-'"/></td>
                                 <td>
-                                    <t t-out="c.name"/>
+                                    <t t-out="c.settlement_date"
+                                       t-options='{"widget": "date"}'/>
                                 </td>
+                                <td><t t-out="c.total_cod_collected"/></td>
+                                <td><t t-out="c.shipping_fees"/></td>
+                                <td><t t-out="c.service_fees"/></td>
                                 <td>
-                                    <t t-out="c.carrier_id.name or '-'"/>
-                                </td>
-                                <td>
-                                    <t t-out="c.date" t-options='{"widget": "date"}'/>
-                                </td>
-                                <td>
-                                    <t t-out="c.total_cod_collected"/>
-                                </td>
-                                <td>
-                                    <t t-out="c.shipping_fees"/>
-                                </td>
-                                <td>
-                                    <t t-out="c.service_fees"/>
-                                </td>
-                                <td>
-                                    <strong>
-                                        <t t-out="c.net_client_amount"/>
-                                    </strong>
+                                    <strong><t t-out="c.net_client_amount"/></strong>
                                 </td>
                                 <td>
                                     <t t-set="cc"
@@ -638,12 +832,13 @@
         </t>
     </template>
 
+
     <!-- ══════════════════════════════════════
          WITHDRAWALS
     ══════════════════════════════════════ -->
     <template id="hobox_withdrawals" name="HOBOX Withdrawals">
         <t t-call="hobox_fulfillment.hobox_layout">
-            <t t-set="page" t-value="'withdrawals'"/>
+            <t t-set="page"       t-value="'withdrawals'"/>
             <t t-set="page_title" t-value="'Withdrawal Requests'"/>
             <div class="hb-actions">
                 <a href="/hobox/withdrawals/new" class="hb-btn hb-btn-primary">
@@ -667,21 +862,14 @@
                     <tbody>
                         <t t-foreach="withdrawals" t-as="w">
                             <tr>
+                                <td><t t-out="w.name"/></td>
                                 <td>
-                                    <t t-out="w.name"/>
+                                    <t t-out="w.request_date"
+                                       t-options='{"widget": "date"}'/>
                                 </td>
-                                <td>
-                                    <t t-out="w.date" t-options='{"widget": "date"}'/>
-                                </td>
-                                <td>
-                                    <t t-out="w.amount_requested"/>
-                                </td>
-                                <td>
-                                    <t t-out="w.amount_approved"/>
-                                </td>
-                                <td>
-                                    <t t-out="w.ref or '-'"/>
-                                </td>
+                                <td><t t-out="w.amount_requested"/></td>
+                                <td><t t-out="w.amount_approved"/></td>
+                                <td><t t-out="w.transfer_ref or '-'"/></td>
                                 <td>
                                     <t t-set="wc"
                                        t-value="'hb-badge-success' if w.state == 'processed' else ('hb-badge-danger' if w.state == 'rejected' else ('hb-badge-info' if w.state == 'approved' else 'hb-badge-warning'))"/>
@@ -702,14 +890,15 @@
 
     <template id="hobox_withdrawal_new" name="HOBOX New Withdrawal">
         <t t-call="hobox_fulfillment.hobox_layout">
-            <t t-set="page" t-value="'withdrawals'"/>
+            <t t-set="page"       t-value="'withdrawals'"/>
             <t t-set="page_title" t-value="'New Withdrawal Request'"/>
             <div class="hb-form-card">
                 <form method="post" action="/hobox/withdrawals/save">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                     <div class="hb-form-group">
                         <label>Amount Requested</label>
-                        <input type="number" name="amount_requested" step="0.01" required="required"/>
+                        <input type="number" name="amount_requested"
+                               step="0.01" required="required"/>
                     </div>
                     <div class="hb-form-group">
                         <label>Bank Account</label>
@@ -727,7 +916,9 @@
                         <textarea name="note" rows="3"/>
                     </div>
                     <div class="hb-form-actions">
-                        <button type="submit" class="hb-btn hb-btn-primary">Submit Request</button>
+                        <button type="submit" class="hb-btn hb-btn-primary">
+                            Submit Request
+                        </button>
                         <a href="/hobox/withdrawals" class="hb-btn hb-btn-outline">Cancel</a>
                     </div>
                 </form>
@@ -735,12 +926,13 @@
         </t>
     </template>
 
+
     <!-- ══════════════════════════════════════
          INTEGRATIONS
     ══════════════════════════════════════ -->
     <template id="hobox_integrations" name="HOBOX Integrations">
         <t t-call="hobox_fulfillment.hobox_layout">
-            <t t-set="page" t-value="'integrations'"/>
+            <t t-set="page"       t-value="'integrations'"/>
             <t t-set="page_title" t-value="'Platform Integrations'"/>
             <div class="hb-actions">
                 <a href="/hobox/integrations/new" class="hb-btn hb-btn-primary">
@@ -764,17 +956,12 @@
                     <tbody>
                         <t t-foreach="integrations" t-as="i">
                             <tr>
+                                <td><t t-out="i.name"/></td>
+                                <td><t t-out="i.platform_type"/></td>
+                                <td><t t-out="'Yes' if i.auto_import else 'No'"/></td>
                                 <td>
-                                    <t t-out="i.name"/>
-                                </td>
-                                <td>
-                                    <t t-out="i.platform_type"/>
-                                </td>
-                                <td>
-                                    <t t-out="'Yes' if i.auto_import else 'No'"/>
-                                </td>
-                                <td>
-                                    <t t-out="i.date" t-options='{"widget": "datetime"}'/>
+                                    <t t-out="i.last_sync"
+                                       t-options='{"widget": "datetime"}'/>
                                 </td>
                                 <td>
                                     <t t-set="ic"
@@ -804,8 +991,9 @@
 
     <template id="hobox_integration_form" name="HOBOX Integration Form">
         <t t-call="hobox_fulfillment.hobox_layout">
-            <t t-set="page" t-value="'integrations'"/>
-            <t t-set="page_title" t-value="'Edit Integration' if integration else 'New Integration'"/>
+            <t t-set="page"       t-value="'integrations'"/>
+            <t t-set="page_title"
+               t-value="'Edit Integration' if integration else 'New Integration'"/>
             <div class="hb-form-card">
                 <form method="post"
                       t-att-action="'/hobox/integrations/%s/save' % (integration.id if integration else 'new')">
@@ -821,36 +1009,28 @@
                             <label>Platform</label>
                             <select name="platform_type" required="required">
                                 <option value="">-- Select Platform --</option>
-                                <t t-set="pt" t-value="integration.platform_type if integration else ''"/>
-                                <option value="shopify" t-att-selected="'selected' if pt == 'shopify'      else False">
-                                    Shopify
-                                </option>
+                                <t t-set="pt"
+                                   t-value="integration.platform_type if integration else ''"/>
+                                <option value="shopify"
+                                        t-att-selected="'selected' if pt == 'shopify'      else False">Shopify</option>
                                 <option value="woocommerce"
-                                        t-att-selected="'selected' if pt == 'woocommerce'  else False">WooCommerce
-                                </option>
-                                <option value="salla" t-att-selected="'selected' if pt == 'salla'        else False">
-                                    Salla
-                                </option>
-                                <option value="zid" t-att-selected="'selected' if pt == 'zid'          else False">Zid
-                                </option>
+                                        t-att-selected="'selected' if pt == 'woocommerce'  else False">WooCommerce</option>
+                                <option value="salla"
+                                        t-att-selected="'selected' if pt == 'salla'        else False">Salla</option>
+                                <option value="zid"
+                                        t-att-selected="'selected' if pt == 'zid'          else False">Zid</option>
                                 <option value="tiktok_shop"
-                                        t-att-selected="'selected' if pt == 'tiktok_shop'  else False">TikTok Shop
-                                </option>
-                                <option value="noon" t-att-selected="'selected' if pt == 'noon'         else False">
-                                    Noon
-                                </option>
-                                <option value="amazon" t-att-selected="'selected' if pt == 'amazon'       else False">
-                                    Amazon
-                                </option>
-                                <option value="magento" t-att-selected="'selected' if pt == 'magento'      else False">
-                                    Magento
-                                </option>
+                                        t-att-selected="'selected' if pt == 'tiktok_shop'  else False">TikTok Shop</option>
+                                <option value="noon"
+                                        t-att-selected="'selected' if pt == 'noon'         else False">Noon</option>
+                                <option value="amazon"
+                                        t-att-selected="'selected' if pt == 'amazon'       else False">Amazon</option>
+                                <option value="magento"
+                                        t-att-selected="'selected' if pt == 'magento'      else False">Magento</option>
                                 <option value="excel_manual"
-                                        t-att-selected="'selected' if pt == 'excel_manual' else False">Manual (Excel)
-                                </option>
-                                <option value="other" t-att-selected="'selected' if pt == 'other'        else False">
-                                    Other
-                                </option>
+                                        t-att-selected="'selected' if pt == 'excel_manual' else False">Manual (Excel)</option>
+                                <option value="other"
+                                        t-att-selected="'selected' if pt == 'other'        else False">Other</option>
                             </select>
                         </div>
                         <div class="hb-form-group">
@@ -884,7 +1064,7 @@
                     <div class="hb-form-group">
                         <label>Notes</label>
                         <textarea name="note" rows="2">
-                            <t t-out="integration.note if integration else ''"/>
+                            <t t-out="integration.notes if integration else ''"/>
                         </textarea>
                     </div>
                     <div class="hb-form-actions">
