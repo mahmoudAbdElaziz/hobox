@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         PUBLIC BASE LAYOUT  (no sidebar — full-width marketing style)
+    ══════════════════════════════════════════════════════════════════════ -->
+    <template id="hobox_public_layout" name="HOBOX Public Layout">
+        <t t-call="website.layout">
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+
+            <body class="hb-pub-body">
+
+                <!-- NAV -->
+                <header class="hb-pub-nav">
+                    <a href="/hobox/landing" class="hb-pub-logo">
+                        <div class="hb-logo-icon">H</div>
+                        <span class="hb-logo-text">HOBOX</span>
+                    </a>
+                    <div class="hb-pub-nav-links">
+                        <a href="#features"  class="hb-pub-nav-link">Features</a>
+                        <a href="#platforms" class="hb-pub-nav-link">Platforms</a>
+                        <a href="#contact"   class="hb-pub-nav-link">Contact</a>
+                    </div>
+                    <div class="hb-pub-nav-cta">
+                        <a href="/web/login"     class="hb-btn hb-btn-outline">Sign In</a>
+                        <a href="/hobox/register" class="hb-btn hb-btn-primary">Get Started</a>
+                    </div>
+                </header>
+
+                <!-- PAGE CONTENT -->
+                <t t-out="0"/>
+
+                <!-- FOOTER -->
+                <footer class="hb-pub-footer">
+                    <div class="hb-pub-footer-inner">
+                        <div class="hb-pub-logo" style="margin-bottom:8px;">
+                            <div class="hb-logo-icon">H</div>
+                            <span class="hb-logo-text" style="color:#fff;">HOBOX</span>
+                        </div>
+                        <p style="color:rgba(255,255,255,.4);font-size:13px;margin:0;">
+                            © 2025 HOBOX Fulfillment. All rights reserved.
+                        </p>
+                    </div>
+                </footer>
+
+            </body>
+        </t>
+    </template>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         LANDING PAGE
+    ══════════════════════════════════════════════════════════════════════ -->
+    <template id="hobox_landing" name="HOBOX Landing Page">
+        <t t-call="hobox_fulfillment.hobox_public_layout">
+
+            <!-- HERO ─────────────────────────────────────────────────────── -->
+            <section class="hb-hero">
+                <div class="hb-hero-badge">🚀 Saudi Arabia's Leading 3PL Solution</div>
+                <h1 class="hb-hero-title">
+                    Fulfillment That <span class="hb-gradient-text">Scales</span><br/>
+                    With Your Business
+                </h1>
+                <p class="hb-hero-sub">
+                    Connect your Shopify, Salla, Zid, or any platform.
+                    We store, pack, and ship — you focus on selling.
+                </p>
+                <div class="hb-hero-actions">
+                    <a href="/hobox/register" class="hb-btn hb-btn-hero-primary">
+                        Start for Free
+                        <i class="fa fa-arrow-right" style="font-size:13px;"/>
+                    </a>
+                    <a href="#features" class="hb-btn hb-btn-hero-outline">Learn More</a>
+                </div>
+                <div class="hb-hero-stats">
+                    <div class="hb-hero-stat">
+                        <span class="hb-hero-stat-num">500+</span>
+                        <span class="hb-hero-stat-lbl">Active Clients</span>
+                    </div>
+                    <div class="hb-hero-stat-divider"/>
+                    <div class="hb-hero-stat">
+                        <span class="hb-hero-stat-num">1M+</span>
+                        <span class="hb-hero-stat-lbl">Orders Fulfilled</span>
+                    </div>
+                    <div class="hb-hero-stat-divider"/>
+                    <div class="hb-hero-stat">
+                        <span class="hb-hero-stat-num">98%</span>
+                        <span class="hb-hero-stat-lbl">On-Time Delivery</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PLATFORMS ────────────────────────────────────────────────── -->
+            <section id="platforms" class="hb-pub-section hb-section-light">
+                <div class="hb-pub-container">
+                    <div class="hb-section-label">Integrations</div>
+                    <h2 class="hb-section-title">Works With Every Platform</h2>
+                    <p class="hb-section-sub">
+                        Seamlessly connect your existing store in minutes — no coding needed.
+                    </p>
+                    <div class="hb-platform-grid">
+                        <div class="hb-platform-chip"><i class="fa fa-shopping-bag"/> Shopify</div>
+                        <div class="hb-platform-chip"><i class="fa fa-wordpress"/> WooCommerce</div>
+                        <div class="hb-platform-chip"><i class="fa fa-store"/> Salla</div>
+                        <div class="hb-platform-chip"><i class="fa fa-tag"/> Zid</div>
+                        <div class="hb-platform-chip"><i class="fa fa-music"/> TikTok Shop</div>
+                        <div class="hb-platform-chip"><i class="fa fa-sun-o"/> Noon</div>
+                        <div class="hb-platform-chip"><i class="fa fa-amazon"/> Amazon</div>
+                        <div class="hb-platform-chip"><i class="fa fa-file-excel-o"/> Manual (Excel)</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FEATURES ─────────────────────────────────────────────────── -->
+            <section id="features" class="hb-pub-section">
+                <div class="hb-pub-container">
+                    <div class="hb-section-label">Why HOBOX</div>
+                    <h2 class="hb-section-title">Everything You Need to Scale</h2>
+                    <p class="hb-section-sub">
+                        From inbound receipts to last-mile delivery and COD settlement —
+                        one platform handles it all.
+                    </p>
+                    <div class="hb-features-grid">
+                        <div class="hb-feature-card">
+                            <div class="hb-feature-icon hb-icon-purple">
+                                <i class="fa fa-cubes"/>
+                            </div>
+                            <h3 class="hb-feature-title">Smart Warehousing</h3>
+                            <p class="hb-feature-desc">
+                                Dedicated storage zones per client. Unit, shelf, or pallet — we
+                                adapt to your product mix and track every item in real time.
+                            </p>
+                        </div>
+                        <div class="hb-feature-card">
+                            <div class="hb-feature-icon hb-icon-cyan">
+                                <i class="fa fa-bolt"/>
+                            </div>
+                            <h3 class="hb-feature-title">Fast Order Processing</h3>
+                            <p class="hb-feature-desc">
+                                Orders pulled automatically from your store, picked, packed, and
+                                handed to the carrier — same day for orders placed before cut-off.
+                            </p>
+                        </div>
+                        <div class="hb-feature-card">
+                            <div class="hb-feature-icon hb-icon-green">
+                                <i class="fa fa-truck"/>
+                            </div>
+                            <h3 class="hb-feature-title">Multi-Carrier Network</h3>
+                            <p class="hb-feature-desc">
+                                We work with all major Saudi carriers. Live tracking status,
+                                delivery attempt logging, and returns management built in.
+                            </p>
+                        </div>
+                        <div class="hb-feature-card">
+                            <div class="hb-feature-icon hb-icon-orange">
+                                <i class="fa fa-money"/>
+                            </div>
+                            <h3 class="hb-feature-title">COD Settlement</h3>
+                            <p class="hb-feature-desc">
+                                Transparent cash-on-delivery reconciliation. View collected amounts,
+                                deductions, and net payouts — then request a withdrawal any time.
+                            </p>
+                        </div>
+                        <div class="hb-feature-card">
+                            <div class="hb-feature-icon hb-icon-red">
+                                <i class="fa fa-bar-chart"/>
+                            </div>
+                            <h3 class="hb-feature-title">Real-Time Dashboard</h3>
+                            <p class="hb-feature-desc">
+                                Your own client portal with live inventory levels, order statuses,
+                                receipt tracking, and financial summaries — 24/7.
+                            </p>
+                        </div>
+                        <div class="hb-feature-card">
+                            <div class="hb-feature-icon hb-icon-purple">
+                                <i class="fa fa-shield"/>
+                            </div>
+                            <h3 class="hb-feature-title">Secure &amp; Scalable</h3>
+                            <p class="hb-feature-desc">
+                                Enterprise-grade infrastructure built on Odoo ERP. Your data is
+                                isolated per client and backed up daily.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HOW IT WORKS ─────────────────────────────────────────────── -->
+            <section class="hb-pub-section hb-section-light">
+                <div class="hb-pub-container hb-center">
+                    <div class="hb-section-label">Process</div>
+                    <h2 class="hb-section-title">Up and Running in 4 Steps</h2>
+                    <div class="hb-steps">
+                        <div class="hb-step">
+                            <div class="hb-step-num">01</div>
+                            <h4 class="hb-step-title">Register</h4>
+                            <p class="hb-step-desc">Submit your details. Our team reviews and approves your account within 24 hours.</p>
+                        </div>
+                        <div class="hb-step-arrow"><i class="fa fa-chevron-right"/></div>
+                        <div class="hb-step">
+                            <div class="hb-step-num">02</div>
+                            <h4 class="hb-step-title">Connect</h4>
+                            <p class="hb-step-desc">Link your store via API or upload a product list. We import your SKUs automatically.</p>
+                        </div>
+                        <div class="hb-step-arrow"><i class="fa fa-chevron-right"/></div>
+                        <div class="hb-step">
+                            <div class="hb-step-num">03</div>
+                            <h4 class="hb-step-title">Ship Inventory</h4>
+                            <p class="hb-step-desc">Send your products to our warehouse. We receive, inspect, and stock them.</p>
+                        </div>
+                        <div class="hb-step-arrow"><i class="fa fa-chevron-right"/></div>
+                        <div class="hb-step">
+                            <div class="hb-step-num">04</div>
+                            <h4 class="hb-step-title">Sell &amp; Grow</h4>
+                            <p class="hb-step-desc">Orders flow in automatically. We fulfill them. You track everything in real time.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FINAL CTA ────────────────────────────────────────────────── -->
+            <section id="contact" class="hb-pub-section hb-section-cta">
+                <div class="hb-pub-container hb-center">
+                    <h2 class="hb-cta-title">Ready to Hand Off Your Fulfillment?</h2>
+                    <p class="hb-cta-sub">
+                        Join hundreds of Saudi e-commerce brands trusting HOBOX to deliver on time, every time.
+                    </p>
+                    <a href="/hobox/register" class="hb-btn hb-btn-hero-primary" style="font-size:15px;padding:14px 32px;">
+                        Create Your Free Account
+                        <i class="fa fa-arrow-right"/>
+                    </a>
+                    <p style="margin-top:14px;color:rgba(255,255,255,.5);font-size:13px;">
+                        No credit card required · Approval within 24 hours
+                    </p>
+                </div>
+            </section>
+
+        </t>
+    </template>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         REGISTRATION FORM
+    ══════════════════════════════════════════════════════════════════════ -->
+    <template id="hobox_register" name="HOBOX Registration">
+        <t t-call="hobox_fulfillment.hobox_public_layout">
+
+            <section class="hb-pub-section" style="padding-top:60px;padding-bottom:80px;">
+                <div class="hb-pub-container" style="max-width:680px;">
+
+                    <!-- Header -->
+                    <div class="hb-center" style="margin-bottom:32px;">
+                        <div class="hb-section-label">Get Started</div>
+                        <h2 class="hb-section-title" style="margin-bottom:10px;">Create Your HOBOX Account</h2>
+                        <p style="color:#64748b;font-size:14px;">
+                            Fill in the details below. Our team will review your request and
+                            reach out within <strong>24 hours</strong>.
+                        </p>
+                    </div>
+
+                    <!-- Global error banner (set by controller if needed) -->
+                    <t t-if="errors">
+                        <div class="hb-alert hb-alert-danger">
+                            <i class="fa fa-exclamation-circle"/>
+                            Please fix the highlighted errors below.
+                        </div>
+                    </t>
+
+                    <div class="hb-form-card" style="max-width:100%;">
+                        <form method="post" action="/hobox/register/submit" novalidate="novalidate">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                            <!-- Personal Info -->
+                            <div class="hb-reg-section-title">Personal Information</div>
+                            <div class="hb-form-row">
+                                <div class="hb-form-group">
+                                    <label>First Name <span class="hb-req">*</span></label>
+                                    <input type="text" name="first_name" required="required"
+                                           t-att-value="values.get('first_name','') if values else ''"
+                                           t-att-class="'hb-input-error' if errors and errors.get('first_name') else ''"/>
+                                    <t t-if="errors and errors.get('first_name')">
+                                        <span class="hb-field-error">
+                                            <t t-out="errors['first_name']"/>
+                                        </span>
+                                    </t>
+                                </div>
+                                <div class="hb-form-group">
+                                    <label>Last Name <span class="hb-req">*</span></label>
+                                    <input type="text" name="last_name" required="required"
+                                           t-att-value="values.get('last_name','') if values else ''"
+                                           t-att-class="'hb-input-error' if errors and errors.get('last_name') else ''"/>
+                                    <t t-if="errors and errors.get('last_name')">
+                                        <span class="hb-field-error">
+                                            <t t-out="errors['last_name']"/>
+                                        </span>
+                                    </t>
+                                </div>
+                            </div>
+                            <div class="hb-form-row">
+                                <div class="hb-form-group">
+                                    <label>Email Address <span class="hb-req">*</span></label>
+                                    <input type="email" name="email" required="required"
+                                           t-att-value="values.get('email','') if values else ''"
+                                           t-att-class="'hb-input-error' if errors and errors.get('email') else ''"/>
+                                    <t t-if="errors and errors.get('email')">
+                                        <span class="hb-field-error">
+                                            <t t-out="errors['email']"/>
+                                        </span>
+                                    </t>
+                                </div>
+                                <div class="hb-form-group">
+                                    <label>Phone Number <span class="hb-req">*</span></label>
+                                    <input type="tel" name="phone" required="required"
+                                           placeholder="+966 5X XXX XXXX"
+                                           t-att-value="values.get('phone','') if values else ''"
+                                           t-att-class="'hb-input-error' if errors and errors.get('phone') else ''"/>
+                                    <t t-if="errors and errors.get('phone')">
+                                        <span class="hb-field-error">
+                                            <t t-out="errors['phone']"/>
+                                        </span>
+                                    </t>
+                                </div>
+                            </div>
+
+                            <!-- Business Info -->
+                            <div class="hb-reg-section-title" style="margin-top:10px;">Business Information</div>
+                            <div class="hb-form-group">
+                                <label>Company / Brand Name <span class="hb-req">*</span></label>
+                                <input type="text" name="company_name" required="required"
+                                       t-att-value="values.get('company_name','') if values else ''"
+                                       t-att-class="'hb-input-error' if errors and errors.get('company_name') else ''"/>
+                                <t t-if="errors and errors.get('company_name')">
+                                    <span class="hb-field-error">
+                                        <t t-out="errors['company_name']"/>
+                                    </span>
+                                </t>
+                            </div>
+                            <div class="hb-form-row">
+                                <div class="hb-form-group">
+                                    <label>Store URL <span class="hb-req">*</span></label>
+                                    <input type="url" name="store_url" required="required"
+                                           placeholder="https://yourstore.com"
+                                           t-att-value="values.get('store_url','') if values else ''"
+                                           t-att-class="'hb-input-error' if errors and errors.get('store_url') else ''"/>
+                                    <t t-if="errors and errors.get('store_url')">
+                                        <span class="hb-field-error">
+                                            <t t-out="errors['store_url']"/>
+                                        </span>
+                                    </t>
+                                </div>
+                                <div class="hb-form-group">
+                                    <label>Sales Platform <span class="hb-req">*</span></label>
+                                    <t t-set="sel_pt" t-value="values.get('platform_type','') if values else ''"/>
+                                    <select name="platform_type" required="required"
+                                            t-att-class="'hb-input-error' if errors and errors.get('platform_type') else ''">
+                                        <option value="">-- Select Platform --</option>
+                                        <option value="shopify"
+                                                t-att-selected="'selected' if sel_pt == 'shopify'       else False">Shopify</option>
+                                        <option value="woocommerce"
+                                                t-att-selected="'selected' if sel_pt == 'woocommerce'   else False">WooCommerce</option>
+                                        <option value="salla"
+                                                t-att-selected="'selected' if sel_pt == 'salla'         else False">Salla</option>
+                                        <option value="zid"
+                                                t-att-selected="'selected' if sel_pt == 'zid'           else False">Zid</option>
+                                        <option value="tiktok_shop"
+                                                t-att-selected="'selected' if sel_pt == 'tiktok_shop'   else False">TikTok Shop</option>
+                                        <option value="noon"
+                                                t-att-selected="'selected' if sel_pt == 'noon'          else False">Noon</option>
+                                        <option value="amazon"
+                                                t-att-selected="'selected' if sel_pt == 'amazon'        else False">Amazon</option>
+                                        <option value="magento"
+                                                t-att-selected="'selected' if sel_pt == 'magento'       else False">Magento</option>
+                                        <option value="excel_manual"
+                                                t-att-selected="'selected' if sel_pt == 'excel_manual'  else False">Manual (Excel)</option>
+                                        <option value="other"
+                                                t-att-selected="'selected' if sel_pt == 'other'         else False">Other</option>
+                                    </select>
+                                    <t t-if="errors and errors.get('platform_type')">
+                                        <span class="hb-field-error">
+                                            <t t-out="errors['platform_type']"/>
+                                        </span>
+                                    </t>
+                                </div>
+                            </div>
+
+                            <div class="hb-form-actions" style="margin-top:28px;">
+                                <button type="submit" class="hb-btn hb-btn-primary"
+                                        style="width:100%;justify-content:center;padding:12px;">
+                                    <i class="fa fa-paper-plane"/>
+                                    Submit Registration Request
+                                </button>
+                            </div>
+                            <p style="text-align:center;margin-top:14px;font-size:13px;color:#94a3b8;">
+                                Already have an account?
+                                <a href="/web/login" style="color:#6366f1;font-weight:600;">Sign in</a>
+                            </p>
+                        </form>
+                    </div>
+
+                </div>
+            </section>
+
+        </t>
+    </template>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         SUCCESS PAGE
+    ══════════════════════════════════════════════════════════════════════ -->
+    <template id="hobox_register_success" name="HOBOX Registration Success">
+        <t t-call="hobox_fulfillment.hobox_public_layout">
+
+            <section class="hb-pub-section" style="padding-top:100px;padding-bottom:120px;">
+                <div class="hb-pub-container hb-center" style="max-width:520px;">
+
+                    <div class="hb-success-icon">
+                        <i class="fa fa-check"/>
+                    </div>
+
+                    <h2 style="font-size:28px;font-weight:800;color:#0f172a;margin:0 0 12px;">
+                        Request Received!
+                    </h2>
+                    <p style="color:#64748b;font-size:15px;line-height:1.7;margin:0 0 32px;">
+                        Thank you for registering with <strong>HOBOX</strong>. Our team will
+                        review your application and get back to you at your provided email address
+                        within <strong>24 hours</strong>.
+                    </p>
+
+                    <div class="hb-success-steps">
+                        <div class="hb-success-step">
+                            <div class="hb-success-step-icon hb-icon-purple">
+                                <i class="fa fa-clock-o"/>
+                            </div>
+                            <div>
+                                <strong>Under Review</strong>
+                                <p>Your request is queued for our onboarding team.</p>
+                            </div>
+                        </div>
+                        <div class="hb-success-step">
+                            <div class="hb-success-step-icon hb-icon-cyan">
+                                <i class="fa fa-envelope"/>
+                            </div>
+                            <div>
+                                <strong>Email Confirmation</strong>
+                                <p>You'll receive approval details via email.</p>
+                            </div>
+                        </div>
+                        <div class="hb-success-step">
+                            <div class="hb-success-step-icon hb-icon-green">
+                                <i class="fa fa-rocket"/>
+                            </div>
+                            <div>
+                                <strong>Onboarding Call</strong>
+                                <p>A dedicated account manager will guide your setup.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="/hobox/landing" class="hb-btn hb-btn-outline" style="margin-top:32px;">
+                        <i class="fa fa-home"/>
+                        Back to Home
+                    </a>
+
+                </div>
+            </section>
+
+        </t>
+    </template>
+
+</odoo>

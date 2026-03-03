@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- INHERIT PICKING FORM -->
+    <record id="hobox_picking_form_view" model="ir.ui.view">
+        <field name="name">stock.picking.form.hobox</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+
+            <field name="partner_id" position="after">
+                <field name="hobox_client_id"/>
+            </field>
+
+        </field>
+    </record>
+
+    <!-- INHERIT PICKING LIST (inbound) -->
+    <record id="hobox_inbound_list_view" model="ir.ui.view">
+        <field name="name">stock.picking.list.hobox.inbound</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree"/>
+        <field name="arch" type="xml">
+
+            <field name="partner_id" position="after">
+                <field name="hobox_client_id" optional="show"/>
+            </field>
+
+        </field>
+    </record>
+
+    <!-- INHERIT PICKING SEARCH -->
+    <record id="hobox_picking_search_view" model="ir.ui.view">
+        <field name="name">stock.picking.search.hobox</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_internal_search"/>
+        <field name="arch" type="xml">
+
+            <field name="partner_id" position="after">
+                <field name="hobox_client_id"/>
+            </field>
+
+            <group position="inside">
+                <filter name="group_hobox_client" string="HOBOX Client" context="{'group_by': 'hobox_client_id'}"/>
+                <filter name="group_hobox_status" string="Carrier Status"
+                        context="{'group_by': 'carrier_tracking_state'}"/>
+            </group>
+
+        </field>
+    </record>
+
+    <!-- ACTIONS -->
+    <record id="action_hobox_inbound" model="ir.actions.act_window">
+        <field name="name">Inbound Shipments</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('picking_type_code', '=', 'incoming')]</field>
+    </record>
+
+    <record id="action_hobox_deliveries" model="ir.actions.act_window">
+        <field name="name">Deliveries</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('picking_type_code', '=', 'outgoing')]</field>
+    </record>
+
+</odoo>

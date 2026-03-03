@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="seq_hobox_client" model="ir.sequence">
+        <field name="name">HOBOX Client</field>
+        <field name="code">hobox.client</field>
+        <field name="prefix">CLT/%(year)s/</field>
+        <field name="padding">4</field>
+    </record>
+
+    <record id="seq_hobox_cod" model="ir.sequence">
+        <field name="name">HOBOX COD Settlement</field>
+        <field name="code">hobox.cod.settlement</field>
+        <field name="prefix">COD/%(year)s/</field>
+        <field name="padding">4</field>
+    </record>
+
+    <record id="seq_hobox_withdrawal" model="ir.sequence">
+        <field name="name">HOBOX Withdrawal</field>
+        <field name="code">hobox.withdrawal</field>
+        <field name="prefix">WD/%(year)s/</field>
+        <field name="padding">4</field>
+    </record>
+
+</odoo>

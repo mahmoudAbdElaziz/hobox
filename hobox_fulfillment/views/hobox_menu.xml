@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ROOT MENU -->
+    <menuitem id="menu_hobox_root"
+        name="HOBOX"
+        sequence="90"
+        web_icon="hobox_fulfillment,static/description/icon.png"/>
+
+    <!-- CLIENTS -->
+    <menuitem id="menu_hobox_clients"
+        name="Clients"
+        parent="menu_hobox_root"
+        sequence="10"/>
+
+    <menuitem id="menu_hobox_client_list"
+        name="Clients"
+        parent="menu_hobox_clients"
+        action="action_hobox_clients"
+        sequence="10"/>
+
+    <menuitem id="menu_hobox_registration"
+        name="Registration Requests"
+        parent="menu_hobox_clients"
+        action="action_hobox_registrations"
+        sequence="20"/>
+
+
+    <menuitem id="menu_hobox_platforms"
+        name="Platform Integrations"
+        parent="menu_hobox_clients"
+        action="action_hobox_platforms"
+        sequence="30"/>
+
+    <!-- INVENTORY -->
+    <menuitem id="menu_hobox_inventory"
+        name="Inventory"
+        parent="menu_hobox_root"
+        sequence="20"/>
+
+    <menuitem id="menu_hobox_skus"
+        name="Products"
+        parent="menu_hobox_inventory"
+        action="action_hobox_skus"
+        sequence="10"/>
+
+    <menuitem id="menu_hobox_inbound"
+        name="Receipts"
+        parent="menu_hobox_inventory"
+        action="stock.action_picking_tree_incoming"
+        sequence="20"/>
+
+    <!-- ORDERS -->
+    <menuitem id="menu_hobox_orders"
+        name="Orders"
+        parent="menu_hobox_root"
+        sequence="30"/>
+
+    <menuitem id="menu_hobox_all_orders"
+        name="Orders"
+        parent="menu_hobox_orders"
+        action="action_hobox_orders"
+        sequence="10"/>
+
+    <menuitem id="menu_hobox_deliveries"
+        name="Deliveries"
+        parent="menu_hobox_orders"
+        action="stock.action_picking_tree_outgoing"
+        sequence="20"/>
+
+    <!-- FINANCE -->
+    <menuitem id="menu_hobox_finance"
+        name="Finance"
+        parent="menu_hobox_root"
+        sequence="40"/>
+
+    <menuitem id="menu_hobox_cod"
+        name="COD Settlements"
+        parent="menu_hobox_finance"
+        action="action_hobox_cod_settlements"
+        sequence="10"/>
+
+    <menuitem id="menu_hobox_withdrawals"
+        name="Withdrawal Requests"
+        parent="menu_hobox_finance"
+        action="action_hobox_withdrawals"
+        sequence="20"/>
+
+</odoo>

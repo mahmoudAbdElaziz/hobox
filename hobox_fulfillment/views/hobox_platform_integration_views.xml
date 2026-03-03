@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- LIST VIEW -->
+    <record id="hobox_platform_list_view" model="ir.ui.view">
+        <field name="name">hobox.platform.integration.list</field>
+        <field name="model">hobox.platform.integration</field>
+        <field name="arch" type="xml">
+            <list string="Platform Integrations">
+                <field name="name"/>
+                <field name="partner_id" string="Client"/>
+                <field name="platform_type"/>
+                <field name="api_url"/>
+                <field name="auto_import"/>
+                <field name="test_mode"/>
+                <field name="last_sync"/>
+                <field name="state" widget="badge"
+                    decoration-success="state == 'connected'"
+                    decoration-danger="state == 'error'"
+                    decoration-warning="state == 'draft'"
+                    decoration-muted="state == 'disconnected'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="hobox_platform_form_view" model="ir.ui.view">
+        <field name="name">hobox.platform.integration.form</field>
+        <field name="model">hobox.platform.integration</field>
+        <field name="arch" type="xml">
+            <form string="Platform Integration">
+                <header>
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="draft,connected,error,disconnected"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Store Name"/></h1>
+                    </div>
+                    <group>
+                        <group string="General">
+                            <field name="partner_id" string="Client"/>
+                            <field name="platform_type"/>
+                            <field name="auto_import"/>
+                            <field name="test_mode"/>
+                        </group>
+                        <group string="API Credentials">
+                            <field name="api_url" placeholder="https://..."/>
+                            <field name="api_key" password="True"/>
+                            <field name="api_secret" password="True"/>
+                            <field name="webhook_url" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Sync Info">
+                        <field name="last_sync" readonly="1"/>
+                        <field name="last_sync_status" readonly="1"/>
+                    </group>
+                    <group string="Notes">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="hobox_platform_search_view" model="ir.ui.view">
+        <field name="name">hobox.platform.integration.search</field>
+        <field name="model">hobox.platform.integration</field>
+        <field name="arch" type="xml">
+            <search string="Search Integrations">
+                <field name="name"/>
+                <field name="partner_id" string="Client"/>
+                <field name="platform_type"/>
+                <filter name="connected"    string="Connected"    domain="[('state','=','connected')]"/>
+                <filter name="error"        string="Error"        domain="[('state','=','error')]"/>
+                <filter name="auto_import"  string="Auto Import"  domain="[('auto_import','=',True)]"/>
+                <group>
+                    <filter name="group_client"   string="Client"   context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_platform" string="Platform" context="{'group_by': 'platform_type'}"/>
+                    <filter name="group_state"    string="Status"   context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_hobox_platforms" model="ir.actions.act_window">
+        <field name="name">Platform Integrations</field>
+        <field name="res_model">hobox.platform.integration</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

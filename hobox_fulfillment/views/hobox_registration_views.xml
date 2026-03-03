@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="hobox_registration_list_view" model="ir.ui.view">
+        <field name="name">hobox.registration.list</field>
+        <field name="model">hobox.registration</field>
+        <field name="arch" type="xml">
+            <list string="Registration Requests"
+                decoration-success="state == 'approved'"
+                decoration-danger="state == 'rejected'"
+                decoration-warning="state == 'pending'">
+                <field name="name"/>
+                <field name="company_name"/>
+                <field name="first_name"/>
+                <field name="last_name"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="platform_type"/>
+                <field name="create_date" string="Submitted"/>
+                <field name="state" widget="badge"
+                    decoration-success="state == 'approved'"
+                    decoration-danger="state == 'rejected'"
+                    decoration-warning="state == 'pending'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hobox_registration_form_view" model="ir.ui.view">
+        <field name="name">hobox.registration.form</field>
+        <field name="model">hobox.registration</field>
+        <field name="arch" type="xml">
+            <form string="Registration Request">
+                <header>
+                    <button name="action_approve" string="Approve"
+                        type="object" class="btn-primary"
+                        invisible="state != 'pending'"/>
+                    <button name="action_reject" string="Reject"
+                        type="object" class="btn-danger"
+                        invisible="state != 'pending'"/>
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="pending,approved,rejected"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group string="Contact Info">
+                            <field name="first_name"/>
+                            <field name="last_name"/>
+                            <field name="email"/>
+                            <field name="phone"/>
+                        </group>
+                        <group string="Business Info">
+                            <field name="company_name"/>
+                            <field name="store_url"/>
+                            <field name="platform_type"/>
+                        </group>
+                    </group>
+                    <group string="Result" invisible="state == 'pending'">
+                        <field name="partner_id" readonly="1"/>
+                        <field name="rejection_reason" invisible="state != 'rejected'"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="hobox_registration_search_view" model="ir.ui.view">
+        <field name="name">hobox.registration.search</field>
+        <field name="model">hobox.registration</field>
+        <field name="arch" type="xml">
+            <search string="Search Registrations">
+                <field name="company_name"/>
+                <field name="email"/>
+                <field name="first_name"/>
+                <filter name="pending"  string="Pending"  domain="[('state','=','pending')]"/>
+                <filter name="approved" string="Approved" domain="[('state','=','approved')]"/>
+                <filter name="rejected" string="Rejected" domain="[('state','=','rejected')]"/>
+                <group>
+                    <filter name="group_state"    string="Status"   context="{'group_by': 'state'}"/>
+                    <filter name="group_platform" string="Platform" context="{'group_by': 'platform_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hobox_registrations" model="ir.actions.act_window">
+        <field name="name">Registration Requests</field>
+        <field name="res_model">hobox.registration</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

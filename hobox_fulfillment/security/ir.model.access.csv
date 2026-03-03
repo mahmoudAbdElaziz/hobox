@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hobox_platform_admin,hobox.platform.integration admin,model_hobox_platform_integration,hobox_fulfillment.group_hobox_admin,1,1,1,1
+access_hobox_platform_ops,hobox.platform.integration ops,model_hobox_platform_integration,hobox_fulfillment.group_hobox_operations,1,1,1,0
+
+access_hobox_cod_admin,hobox.cod.settlement admin,model_hobox_cod_settlement,hobox_fulfillment.group_hobox_admin,1,1,1,1
+access_hobox_cod_ops,hobox.cod.settlement ops,model_hobox_cod_settlement,hobox_fulfillment.group_hobox_operations,1,0,0,0
+
+access_hobox_withdrawal_admin,hobox.withdrawal.request admin,model_hobox_withdrawal_request,hobox_fulfillment.group_hobox_admin,1,1,1,1
+access_hobox_withdrawal_ops,hobox.withdrawal.request ops,model_hobox_withdrawal_request,hobox_fulfillment.group_hobox_operations,1,0,0,0
+
+access_hobox_registration_portal,hobox.registration.portal,model_hobox_registration,base.group_portal,1,1,1,0
+access_hobox_registration_ops,hobox.registration.ops,model_hobox_registration,hobox_fulfillment.group_hobox_operations,1,1,1,1

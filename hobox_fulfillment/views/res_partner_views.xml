@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- INHERIT PARTNER FORM -->
+    <record id="hobox_client_form_view" model="ir.ui.view">
+        <field name="name">res.partner.form.hobox</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Smart Buttons -->
+            <xpath expr="//div[@name='button_box']/button" position="before">
+
+                <button name="action_hobox_client_orders" type="object"
+                        class="oe_stat_button" icon="fa-shopping-cart"
+                        invisible="not is_hobox_client">
+                    <field name="hobox_order_count" widget="statinfo" string="Orders"/>
+                </button>
+                <button name="action_hobox_client_products" type="object"
+                        class="oe_stat_button" icon="fa-cube"
+                        invisible="not is_hobox_client">
+                    <field name="hobox_product_count" widget="statinfo" string="Products"/>
+                </button>
+                <button name="action_hobox_client_receipts" type="object"
+                        class="oe_stat_button" icon="fa-truck"
+                        invisible="not is_hobox_client">
+                    <field name="hobox_receipt_count" widget="statinfo" string="Receipts"/>
+                </button>
+                <button name="action_hobox_client_deliveries" type="object"
+                        class="oe_stat_button" icon="fa-send"
+                        invisible="not is_hobox_client">
+                    <field name="hobox_delivery_count" widget="statinfo" string="Deliveries"/>
+                </button>
+                <button name="action_hobox_client_cod" type="object"
+                        class="oe_stat_button" icon="fa-money"
+                        invisible="not is_hobox_client">
+                    <field name="hobox_cod_count" widget="statinfo" string="COD"/>
+                </button>
+                <button name="action_hobox_client_withdrawals" type="object"
+                        class="oe_stat_button" icon="fa-exchange"
+                        invisible="not is_hobox_client">
+                    <field name="hobox_withdrawal_count" widget="statinfo" string="Withdrawals"/>
+                </button>
+                <button name="action_hobox_client_integrations" type="object"
+                        class="oe_stat_button" icon="fa-plug"
+                        invisible="not is_hobox_client">
+                    <field name="integration_count" widget="statinfo" string="Integrations"/>
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="is_hobox_client"/>
+            </xpath>
+            <!-- Add HOBOX tab inside notebook -->
+            <notebook position="inside">
+                <page string="HOBOX" invisible="not is_hobox_client">
+                    <group>
+                        <group string="Client Info">
+                            <field name="ref" string="Client Code" readonly="1"/>
+                            <field name="date" string="Agreement Date"/>
+                            <field name="contract_document" widget="binary" filename="contract_filename"/>
+                            <field name="contract_filename" invisible="1"/>
+                        </group>
+                        <group string="Warehouse &amp; Storage">
+                            <field name="warehouse_id"/>
+                            <field name="default_storage_type"/>
+                        </group>
+                    </group>
+                    <field name="integration_ids">
+                        <list>
+                            <field name="name"/>
+                            <field name="platform_type"/>
+                            <field name="state" widget="badge"
+                                   decoration-success="state == 'connected'"
+                                   decoration-danger="state == 'error'"
+                                   decoration-warning="state == 'draft'"/>
+                            <field name="last_sync" string="Last Sync"/>
+                            <field name="auto_import"/>
+                        </list>
+                    </field>
+                </page>
+            </notebook>
+
+        </field>
+    </record>
+
+    <!-- INHERIT PARTNER LIST -->
+
+    <!-- ACTION -->
+    <record id="action_hobox_clients" model="ir.actions.act_window">
+        <field name="name">Clients</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_hobox_client', '=', True)]</field>
+        <field name="context">{'default_is_hobox_client': True}</field>
+    </record>
+
+</odoo>

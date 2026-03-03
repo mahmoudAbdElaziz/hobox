@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- LIST VIEW -->
+    <record id="hobox_cod_list_view" model="ir.ui.view">
+        <field name="name">hobox.cod.settlement.list</field>
+        <field name="model">hobox.cod.settlement</field>
+        <field name="arch" type="xml">
+            <list string="COD Settlements">
+                <field name="name"/>
+                <field name="partner_id" string="Client"/>
+                <field name="carrier_id"/>
+                <field name="settlement_date"/>
+                <field name="total_cod_collected" widget="monetary"/>
+                <field name="shipping_fees" widget="monetary"/>
+                <field name="service_fees" widget="monetary"/>
+                <field name="net_client_amount" widget="monetary"/>
+                <field name="state" widget="badge"
+                    decoration-success="state == 'transferred'"
+                    decoration-warning="state == 'confirmed'"
+                    decoration-info="state == 'draft'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="hobox_cod_form_view" model="ir.ui.view">
+        <field name="name">hobox.cod.settlement.form</field>
+        <field name="model">hobox.cod.settlement</field>
+        <field name="arch" type="xml">
+            <form string="COD Settlement">
+                <header>
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="draft,confirmed,transferred"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Settlement Info">
+                            <field name="partner_id" string="Client"/>
+                            <field name="carrier_id"/>
+                            <field name="settlement_date"/>
+                            <field name="transfer_ref"/>
+                        </group>
+                        <group string="Amounts">
+                            <field name="total_cod_collected" widget="monetary"/>
+                            <field name="shipping_fees" widget="monetary"/>
+                            <field name="service_fees" widget="monetary"/>
+                            <field name="other_deductions" widget="monetary"/>
+                            <field name="net_client_amount" widget="monetary"
+                                class="fw-bold" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="COD Orders">
+                            <field name="sale_order_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="partner_id" string="Customer"/>
+                                    <field name="cod_amount" widget="monetary"/>
+                                    <field name="delivery_zone"/>
+                                    <field name="hobox_state"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Accounting">
+                            <group>
+                                <field name="journal_id"/>
+                                <field name="account_move_id" readonly="1"/>
+                            </group>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="hobox_cod_search_view" model="ir.ui.view">
+        <field name="name">hobox.cod.settlement.search</field>
+        <field name="model">hobox.cod.settlement</field>
+        <field name="arch" type="xml">
+            <search string="Search COD Settlements">
+                <field name="name"/>
+                <field name="partner_id" string="Client"/>
+                <field name="carrier_id"/>
+                <filter name="draft"       string="Draft"       domain="[('state','=','draft')]"/>
+                <filter name="confirmed"   string="Confirmed"   domain="[('state','=','confirmed')]"/>
+                <filter name="transferred" string="Transferred" domain="[('state','=','transferred')]"/>
+                <group>
+                    <filter name="group_client"  string="Client"  context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_carrier" string="Carrier" context="{'group_by': 'carrier_id'}"/>
+                    <filter name="group_state"   string="Status"  context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_hobox_cod_settlements" model="ir.actions.act_window">
+        <field name="name">COD Settlements</field>
+        <field name="res_model">hobox.cod.settlement</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

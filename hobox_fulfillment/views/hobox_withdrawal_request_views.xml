@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- LIST VIEW -->
+    <record id="hobox_withdrawal_list_view" model="ir.ui.view">
+        <field name="name">hobox.withdrawal.request.list</field>
+        <field name="model">hobox.withdrawal.request</field>
+        <field name="arch" type="xml">
+            <list string="Withdrawal Requests">
+                <field name="name"/>
+                <field name="partner_id" string="Client"/>
+                <field name="request_date"/>
+                <field name="amount_requested" widget="monetary"/>
+                <field name="amount_approved" widget="monetary"/>
+                <field name="bank_account_id"/>
+                <field name="approved_by"/>
+                <field name="processed_date"/>
+                <field name="state" widget="badge"
+                    decoration-success="state == 'processed'"
+                    decoration-warning="state == 'approved'"
+                    decoration-info="state == 'requested'"
+                    decoration-danger="state == 'rejected'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="hobox_withdrawal_form_view" model="ir.ui.view">
+        <field name="name">hobox.withdrawal.request.form</field>
+        <field name="model">hobox.withdrawal.request</field>
+        <field name="arch" type="xml">
+            <form string="Withdrawal Request">
+                <header>
+                    <button name="action_request" string="Submit Request"
+                        type="object" class="btn-primary"
+                        invisible="state != 'draft'"/>
+                    <button name="action_approve" string="Approve"
+                        type="object" class="btn-primary"
+                        invisible="state != 'requested'"/>
+                    <button name="action_process" string="Mark as Processed"
+                        type="object" class="btn-primary"
+                        invisible="state != 'approved'"/>
+                    <button name="action_reject" string="Reject"
+                        type="object" class="btn-danger"
+                        invisible="state in ['processed','rejected']"/>
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="draft,requested,approved,processed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Request Info">
+                            <field name="partner_id" string="Client"/>
+                            <field name="request_date"/>
+                            <field name="bank_account_id"
+                                domain="[('partner_id','=',partner_id)]"/>
+                        </group>
+                        <group string="Amounts">
+                            <field name="amount_requested" widget="monetary"/>
+                            <field name="amount_approved" widget="monetary"
+                                invisible="state == 'draft'"/>
+                        </group>
+                    </group>
+                    <group string="Processing">
+                        <group>
+                            <field name="approved_by" readonly="1"/>
+                            <field name="processed_date" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="transfer_ref"/>
+                            <field name="vendor_bill_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Notes">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="hobox_withdrawal_search_view" model="ir.ui.view">
+        <field name="name">hobox.withdrawal.request.search</field>
+        <field name="model">hobox.withdrawal.request</field>
+        <field name="arch" type="xml">
+            <search string="Search Withdrawals">
+                <field name="name"/>
+                <field name="partner_id" string="Client"/>
+                <field name="transfer_ref"/>
+                <filter name="draft"     string="Draft"     domain="[('state','=','draft')]"/>
+                <filter name="requested" string="Requested" domain="[('state','=','requested')]"/>
+                <filter name="approved"  string="Approved"  domain="[('state','=','approved')]"/>
+                <filter name="processed" string="Processed" domain="[('state','=','processed')]"/>
+                <filter name="rejected"  string="Rejected"  domain="[('state','=','rejected')]"/>
+                <group>
+                    <filter name="group_client" string="Client" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_state"  string="Status" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTION -->
+    <record id="action_hobox_withdrawals" model="ir.actions.act_window">
+        <field name="name">Withdrawal Requests</field>
+        <field name="res_model">hobox.withdrawal.request</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>
