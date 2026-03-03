@@ -9,19 +9,20 @@
         <field name="arch" type="xml">
 
             <!-- Add HOBOX fields after partner_id -->
-            <field name="partner_id" position="after">
-                <field name="hobox_client_id"/>
-                <field name="source_platform_id"
-                    domain="[('partner_id','=',hobox_client_id)]"/>
-                <field name="source_order_ref"/>
-                <field name="delivery_zone"/>
-                <field name="is_cod"/>
-            </field>
+            <group name="sale_shipping" position="after">
+                <group string="HOBOX Fulfillment" name="hobox_fulfillment_info" class="oe_subsection">
+                    <field name="hobox_client_id"/>
+                    <field name="source_platform_id" domain="[('partner_id','=',hobox_client_id)]"/>
+                    <field name="source_order_ref"/>
+                    <field name="hobox_state"/>
+                    <field name="delivery_zone"/>
+                    <field name="is_cod"/>
+                </group>
+            </group>
 
             <!-- Add fulfillment statusbar before existing header buttons -->
             <xpath expr="//header" position="inside">
-                <field name="hobox_state" widget="statusbar"
-                    statusbar_visible="received,processing,ready,shipped,completed"/>
+
             </xpath>
 
         </field>
@@ -41,10 +42,10 @@
                 <field name="delivery_zone" optional="show"/>
                 <field name="is_cod" optional="show"/>
                 <field name="hobox_state" optional="show" widget="badge"
-                    decoration-success="hobox_state == 'completed'"
-                    decoration-info="hobox_state == 'shipped'"
-                    decoration-warning="hobox_state == 'processing'"
-                    decoration-danger="hobox_state == 'cancelled'"/>
+                       decoration-success="hobox_state == 'completed'"
+                       decoration-info="hobox_state == 'shipped'"
+                       decoration-warning="hobox_state == 'processing'"
+                       decoration-danger="hobox_state == 'cancelled'"/>
             </field>
 
         </field>
@@ -62,19 +63,19 @@
                 <field name="source_order_ref"/>
                 <field name="source_platform_id"/>
                 <separator/>
-                <filter name="hobox_cod"        string="COD"        domain="[('is_cod','=',True)]"/>
-                <filter name="hobox_received"   string="Received"   domain="[('hobox_state','=','received')]"/>
+                <filter name="hobox_cod" string="COD" domain="[('is_cod','=',True)]"/>
+                <filter name="hobox_received" string="Received" domain="[('hobox_state','=','received')]"/>
                 <filter name="hobox_processing" string="Processing" domain="[('hobox_state','=','processing')]"/>
-                <filter name="hobox_shipped"    string="Shipped"    domain="[('hobox_state','=','shipped')]"/>
-                <filter name="hobox_completed"  string="Completed"  domain="[('hobox_state','=','completed')]"/>
-                <filter name="hobox_cancelled"  string="Cancelled"  domain="[('hobox_state','=','cancelled')]"/>
+                <filter name="hobox_shipped" string="Shipped" domain="[('hobox_state','=','shipped')]"/>
+                <filter name="hobox_completed" string="Completed" domain="[('hobox_state','=','completed')]"/>
+                <filter name="hobox_cancelled" string="Cancelled" domain="[('hobox_state','=','cancelled')]"/>
             </filter>
 
             <group position="inside">
-                <filter name="group_hobox_client"   string="HOBOX Client" context="{'group_by': 'hobox_client_id'}"/>
-                <filter name="group_hobox_platform" string="Platform"     context="{'group_by': 'source_platform_id'}"/>
-                <filter name="group_hobox_zone"     string="Zone"         context="{'group_by': 'delivery_zone'}"/>
-                <filter name="group_hobox_state"    string="Fulfillment"  context="{'group_by': 'hobox_state'}"/>
+                <filter name="group_hobox_client" string="HOBOX Client" context="{'group_by': 'hobox_client_id'}"/>
+                <filter name="group_hobox_platform" string="Platform" context="{'group_by': 'source_platform_id'}"/>
+                <filter name="group_hobox_zone" string="Zone" context="{'group_by': 'delivery_zone'}"/>
+                <filter name="group_hobox_state" string="Fulfillment" context="{'group_by': 'hobox_state'}"/>
             </group>
 
         </field>
